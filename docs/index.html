@@ -383,16 +383,21 @@ const readAPIKey = "0NGJYHZW5BA8BCWD";
 
 /* === FONCTIONS UTILES === */
 function autoZoom() {
-  const width = window.innerWidth;
+  const baseWidth = 250; // largeur de ton design
+  const screenWidth = window.innerWidth;
 
-  let scale = width / 250;
-	//let scale = 1;
-	
+  let scale = screenWidth / baseWidth;
+
+  // limite pour éviter bugs et flou excessif
+  if (scale > 2) scale = 2;
+  if (scale < 0.5) scale = 0.5;
+
   const wrapper = document.getElementById("zoom-wrapper");
 
   wrapper.style.transformOrigin = "top left";
   wrapper.style.transform = `scale(${scale})`;
-  wrapper.style.width = `${100 / scale}%`;
+
+  // IMPORTANT : ne touche PAS width sinon layout cassé
 }
 
 function avgDirection(arr){
