@@ -375,6 +375,21 @@ const channelID = 3217135;
 const readAPIKey = "0NGJYHZW5BA8BCWD";
 
 /* === FONCTIONS UTILES === */
+  function autoZoom() {
+    const width = window.innerWidth;
+
+    let scale = 1;
+
+    if (width < 400) scale = 1.25;
+    else if (width < 600) scale = 1.15;
+    else if (width < 900) scale = 1;
+    else scale = 0.9;
+
+    const wrapper = document.getElementById("zoom-wrapper");
+    wrapper.style.transform = `scale(${scale})`;
+    wrapper.style.width = `${100 / scale}%`;
+  }
+
 function avgDirection(arr){
     if(!arr || arr.length === 0) return 0;
     let sumSin=0, sumCos=0, count=0;
@@ -661,6 +676,10 @@ async function loadTimeline(){
     }
 }
 
+// autoZoom
+window.addEventListener("resize", autoZoom);
+window.addEventListener("load", autoZoom);
+	
 // Lancement
 updateVent();
 setInterval(updateVent,15000);
