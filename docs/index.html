@@ -386,7 +386,7 @@ function autoZoom() {
   const baseWidth = 250; // largeur de ton design
   const screenWidth = window.innerWidth;
 
-  let scale = 0.5 * screenWidth / baseWidth ;
+  let scale = screenWidth / 2* baseWidth ;
 
   // limite pour éviter bugs et flou excessif
   //if (scale > 2) scale = 2;
