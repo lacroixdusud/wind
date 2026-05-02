@@ -3,196 +3,132 @@
 <head>
 <meta charset="UTF-8">
 <title>wind.lacroixdusud.club</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ✅ IMPORTANT : viewport pour mobile -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+/* ✅ Zoom global propre sans flou */
 body {
-  margin:0;
-  font-family:Arial, sans-serif;
+  zoom: 1.2; /* ajuste ici (1 = normal, 1.3 = plus gros) */
+  margin: 0;
+  font-family: Arial, sans-serif;
 }
 
-#app {
-  padding:8px;
-  max-width:100vw;
-  box-sizing:border-box;
-}
-
-/* cercle responsive */
-.weather-circle {
-  width:clamp(180px, 65vw, 230px);
-  height:clamp(180px, 65vw, 230px);
-  border:3px solid #333;
-  border-radius:50%;
-  background:#f9f9f9;
-  position:relative;
-  margin-top:5px;
-}
-
-/* timeline */
-#timeline-container {
-  display:flex;
-  width:100%;
-  max-width:420px;
-  background:#111;
-  margin-top:5px;
-}
-
-#units-column {
-  width:40px;
-  background:black;
-  color:white;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-}
-
-#timeline {
-  display:flex;
-  overflow-x:auto;
-}
-
-.col {
-  min-width:50px;
-  height:140px;
-  position:relative;
-}
-
-.band-wind {height:50%;}
-.band-temp {height:25%;}
-.band-hum {height:25%;}
-
-.content {
-  position:absolute;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:space-evenly;
-  font-size:12px;
+/* fallback Firefox */
+@supports not (zoom: 1) {
+  body {
+    transform: scale(1.2);
+    transform-origin: top left;
+    width: calc(100% / 1.2);
+  }
 }
 </style>
+
 </head>
 
 <body>
 
-<div id="app">
-
+<div style="font-size:14px; margin-bottom:10px;">
 🕒 <span id="lastUpdate">--</span>
+</div>
 
-<div class="weather-circle">
-
-<div style="position:absolute;top:0;left:50%;transform:translateX(-50%)">N</div>
-<div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%)">S</div>
-<div style="position:absolute;top:50%;right:0;transform:translateY(-50%)">E</div>
-<div style="position:absolute;top:50%;left:0;transform:translateY(-50%)">W</div>
-
-🌡️<span id="temperature">--</span>°C  
-💧<span id="humidity">--</span>%
-
-<!-- flèche -->
-<div id="arrow" style="
-position:absolute;
-top:50%;
-left:50%;
-width:100px;
-height:30px;
-transform-origin:center;
+<!-- === CERCLE === -->
+<div style="
+position: relative; 
+width:230px; height:230px; 
+margin:5px; 
+border:3px solid #333; 
+border-radius:50%; 
+background:#f9f9f9;
 ">
 
-<svg viewBox="0 0 100 30">
-<polygon points="0,15 80,0 80,30" fill="gray"/>
-</svg>
+<div style="position:absolute; top:0; left:50%; transform:translateX(-50%);">N</div>
+<div style="position:absolute; bottom:0; left:50%; transform:translateX(-50%);">S</div>
+<div style="position:absolute; top:50%; right:2px; transform:translateY(-50%);">E</div>
+<div style="position:absolute; top:50%; left:2px; transform:translateY(-50%);">W</div>
 
+<div style="position:absolute; top:0; left:0;">
+🌡️<span id="temperature">--</span>°C
+</div>
+
+<div style="position:absolute; top:0; right:0;">
+💧<span id="humidity">--</span>%
 </div>
 
 </div>
 
-<!-- timeline -->
-<div id="timeline-container">
-<div id="timeline"></div>
-</div>
-
-</div>
+<!-- === TIMELINE === -->
+<div id="timeline" style="display:flex; overflow-x:auto; width:100%; background:#111; color:white; margin-top:10px;"></div>
 
 <script>
+
 const channelID = 3217135;
 const readAPIKey = "0NGJYHZW5BA8BCWD";
 
+/* === UPDATE DATA === */
 async function updateVent(){
-  const r = await fetch(`https://api.thingspeak.com/channels/${channelID}/fields/7/last.json?api_key=${readAPIKey}`);
-  const j = await r.json();
+    try{
+        const r = await fetch(`https://api.thingspeak.com/channels/${channelID}/fields/7/last.json?api_key=${readAPIKey}`);
+        const d = await r.json();
 
-  if(!j.field7) return;
+        if(!d.field7) return;
 
-  const s = j.field7.toString();
+        const str = d.field7.toString();
 
-  const vent = parseInt(s.slice(0,3))/10;
-  const dir = parseInt(s.slice(5,8));
-  const temp = parseInt(s.slice(8,11))/2-25;
-  const hum = parseInt(s.slice(11,13));
+        document.getElementById("temperature").textContent =
+            (parseInt(str.slice(8,11))/2-25).toFixed(1);
 
-  document.getElementById("temperature").textContent=temp.toFixed(1);
-  document.getElementById("humidity").textContent=hum;
+        document.getElementById("humidity").textContent =
+            parseInt(str.slice(11,13));
 
-  document.getElementById("arrow").style.transform =
-    `translate(-50%,-50%) rotate(${dir}deg)`;
+        document.getElementById("lastUpdate").textContent =
+            new Date(d.created_at).toLocaleString();
 
-  document.getElementById("lastUpdate").textContent =
-    new Date(j.created_at).toLocaleString();
+    } catch(e){
+        console.log(e);
+    }
 }
 
+/* === TIMELINE SIMPLE === */
 async function loadTimeline(){
-  const r = await fetch(`https://api.thingspeak.com/channels/${channelID}/feeds.json?results=50&api_key=${readAPIKey}`);
-  const data = await r.json();
+    try{
+        const r = await fetch(`https://api.thingspeak.com/channels/${channelID}/feeds.json?results=20&api_key=${readAPIKey}`);
+        const data = await r.json();
 
-  const timeline = document.getElementById("timeline");
-  timeline.innerHTML="";
+        const tl = document.getElementById("timeline");
+        tl.innerHTML = "";
 
-  data.feeds.forEach(f=>{
-    if(!f.field7) return;
+        data.feeds.forEach(f=>{
+            if(!f.field7) return;
 
-    const s=f.field7.toString();
-    const vent=parseInt(s.slice(0,3))/10;
-    const temp=parseInt(s.slice(8,11))/2-25;
-    const hum=parseInt(s.slice(11,13));
+            const str = f.field7.toString();
+            const vent = parseInt(str.slice(0,3))/10;
 
-    const col=document.createElement("div");
-    col.className="col";
+            const col = document.createElement("div");
+            col.style.minWidth = "50px";
+            col.style.padding = "5px";
+            col.style.textAlign = "center";
+            col.innerHTML = `
+                <div>${new Date(f.created_at).getHours()}h</div>
+                <div>${vent}</div>
+            `;
 
-    const wind=document.createElement("div");
-    wind.className="band-wind";
-    wind.style.background="blue";
+            tl.appendChild(col);
+        });
 
-    const t=document.createElement("div");
-    t.className="band-temp";
-    t.style.background="orange";
-
-    const h=document.createElement("div");
-    h.className="band-hum";
-    h.style.background="cyan";
-
-    const c=document.createElement("div");
-    c.className="content";
-    c.innerHTML=`
-      <div>${Math.round(vent)}</div>
-      <div>${Math.round(temp)}</div>
-      <div>${Math.round(hum)}</div>
-    `;
-
-    col.appendChild(wind);
-    col.appendChild(t);
-    col.appendChild(h);
-    col.appendChild(c);
-
-    timeline.appendChild(col);
-  });
+    } catch(e){
+        console.log(e);
+    }
 }
 
+/* RUN */
 updateVent();
 setInterval(updateVent,15000);
 
 loadTimeline();
 setInterval(loadTimeline,60000);
+
 </script>
 
 </body>
