@@ -375,17 +375,17 @@ const channelID = 3217135;
 const readAPIKey = "0NGJYHZW5BA8BCWD";
 
 /* === FONCTIONS UTILES === */
-  function autoZoom() {
-    const width = window.innerWidth;
+function autoZoom() {
+  const width = window.innerWidth;
 
-    let scale = 2;
+  let scale = width / 250;
 
-    scale = width/250;
+  const wrapper = document.getElementById("zoom-wrapper");
 
-    const wrapper = document.getElementById("zoom-wrapper");
-    wrapper.style.transform = `scale(${scale})`;
-    wrapper.style.width = `${100 / scale}%`;
-  }
+  wrapper.style.transformOrigin = "top left";
+  wrapper.style.transform = `scale(${scale})`;
+  wrapper.style.width = `${100 / scale}%`;
+}
 
 function avgDirection(arr){
     if(!arr || arr.length === 0) return 0;
