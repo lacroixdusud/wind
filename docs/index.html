@@ -2,110 +2,666 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>wind.lacroixdusud.club</title>
-
-<style>
-body {
-  margin: 0;
-  overflow-x: hidden;
-  font-family: Arial, sans-serif;
-}
-
-/* ===== MOBILE ===== */
-@media (max-width: 600px) {
-
-  /* cercle vent (TON BLOC EXACT via selector safe) */
-  div[style*="border-radius:50%"] {
-    width: 100vw !important;
-    height: 100vw !important;
-    margin: 0 auto !important;
-  }
-
-  /* timeline full width */
-  #timeline-container {
-    width: 100vw !important;
-  }
-
-  #timeline-wrapper {
-    width: calc(100vw - 40px) !important;
-  }
-
-}
-</style>
-
 </head>
-
 <body>
-
 <div style="font-family: Arial, sans-serif; font-size:18px; text-align:left; margin:0px; color:black;"> 
 
 <div style="font-size:14px; margin-bottom:10px;">
 🕒 <span id="lastUpdate">--</span>
 </div>
 
-<!-- CERCLE -->
-<div style="position: relative; 
-  width:230px; height:230px; 
-  margin:5px 0; 
-  border:3px solid #333; 
-  border-radius:50%; 
-  background:#f9f9f9;
+<!-- === FLECHE DE VENT ET INFOS === -->
+<div>
+   
+    <div style="
+		position: relative; 
+		width:230px; height:230px; 
+		margin:5px 0; 
+		border:3px solid #333; 
+		border-radius:50%; 
+		background:#f9f9f9;
+		">
+<!-- Points cardinaux --> 	
+	<div style="position:absolute; top:0px; left:50%; transform: translateX(-50%); font-size:16px;color:gray;">N</div>
+  	<div style="position:absolute; bottom:0px; left:50%; transform: translateX(-50%); font-size:16px;color:gray;">S</div>
+  	<div style="position:absolute; top:50%; right:2px; transform: translateY(-50%); font-size:16px;color:gray;">E</div>
+  	<div style="position:absolute; top:50%; left:2px; transform: translateY(-50%); font-size:16px;color:gray;">W</div>
+
+<!-- Temp et hum  --> 
+<div style="position:absolute; top:0px; left:-2px;  transform: translateY(-50%);font-size:16px;color:black;">
+🌡️<span id="temperature">--</span>°C 
+</div>
+
+<div style="position:absolute; top:0px; right:0px;  transform: translateY(-50%);font-size:16px;color:black;">
+💧<span id="humidity">--</span>% 
+</div>
+
+
+<!-- Rectangle tourné exemple -->
+<div style="
+  width:185px; 
+  height:85px; 
+  background-color:#228B22; 
+  border:2px solid black;
+  position:absolute; 
+  top:50%; 
+  left:50%;
+  border-radius:5px; 
+  transform: translate(-50%, -50%) rotate(47deg);
+  transform-origin:center;
 ">
 
-<!-- POINTS CARDINAUX -->
-<div style="position:absolute; top:0px; left:50%; transform:translateX(-50%);">N</div>
-<div style="position:absolute; bottom:0px; left:50%; transform:translateX(-50%);">S</div>
-<div style="position:absolute; top:50%; right:2px;">E</div>
-<div style="position:absolute; top:50%; left:2px;">W</div>
+  <!-- Petit rectangle centré en bas -->
+  <div style="
+    position:absolute;
+    bottom:-2px; 
+    border:2px solid black;             
+    left:50%;
+    transform:translateX(-50%);
+    width:40px;
+    height:12px;
+    background:gray;
+    border-radius:2px;
+  "></div>
 
-<!-- TEMP / HUM -->
-<div style="position:absolute; top:0px; left:-2px;">
-🌡️<span id="temperature">--</span>°C
+	<!-- FLECHE SEUIL -->
+  	<div id="runwayArrowNW"
+    	style="
+      	position:absolute;
+      	top:50%;              /* seuil haut */
+      	transform:translateY(-50%);
+	right:2px;
+      	width:30px;
+      	height:50px;
+    	">
+
+    	<svg viewBox="0 0 60 100" width="100%" height="100%">
+      	<polygon points="0,50 50,0 60,10 20,50 60,90 50,100 "
+        	fill="white"
+        	stroke="black"
+        	stroke-width="2"/>
+    	</svg>
+  	</div>
+
+	<!-- FLECHE SEUIL -->
+  	<div id="runwayArrowSE"
+    	style="
+      	position:absolute;
+      	top:50%;              /* seuil haut */
+      	transform:translateY(-50%);
+	left:2px;
+      	width:30px;
+      	height:50px;
+    	">
+
+    	<svg viewBox="0 0 60 100" width="100%" height="100%">
+      	<polygon points="60,50 10,0 0,10 40,50 0,90 10,100 "
+        	fill="white"
+        	stroke="black"
+        	stroke-width="2"/>
+    	</svg>
+  	</div>
+
 </div>
 
-<div style="position:absolute; top:0px; right:0px;">
-💧<span id="humidity">--</span>%
-</div>
+<!-- FLECHE SVG coté W -->
+  <div id="flecheContainer"
+     style="
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform: translate(-95px, -15px) rotate(0deg);
+        transform-origin: 95px 15px;
+        width:95px;
+        height:30px;
+     ">
+           
+        <svg viewBox="0 0 95 30" width="95" height="30" >
 
-<!-- VENT (inchangé) -->
-<div id="flecheContainer"></div>
+          <!-- BASE (rafale) -->
+          <polygon id="zoneRafale"
+            points="0,0 38,0 24,30 0,30"
+            fill="darkgray"
+  	    stroke="black"
+  	    stroke-width="2"
+  	    vector-effect="non-scaling-stroke" />
 
-</div>
+          <!-- POINTE (vent moyen) -->
+          <polygon id="zoneVent"
+            points="38,0 82,0 95,15 82,30 24,30"
+            fill="gray"
+	    stroke="black"
+  	    stroke-width="2"
+  	    vector-effect="non-scaling-stroke" />
 
-<!-- TIMELINE -->
-<div id="timeline-container">
-  <div id="timeline-wrapper">
-    <div id="timeline"></div>
+          <!-- TEXTE VENT -->
+          <text 
+            x="56" y="26"
+            font-size="16"
+            text-anchor="middle"
+            font-family="Arial"
+	    font-weight="bold"
+            fill="black">
+		<tspan id="textVent">---</tspan>
+  		<tspan id="kmhW" font-size="8">km/h</tspan>
+	    </text>
+
+          <!-- TEXTE RAFALE -->
+          <text 
+            x="16" y="16"
+            font-size="16"
+            text-anchor="middle"
+            font-family="Arial"
+	    font-weight="bold"
+            fill="black">
+		<tspan id="textRafale">--</tspan>
+		<tspan id="*W">*</tspan>
+	   </text>
+      </svg>
+    </div>
+
+<!-- FLECHE SVG coté E -->
+  <div id="flecheContainerE"
+     style="
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform: translate(0px, -15px) rotate(0deg);
+        transform-origin: 0px 15px;
+        width:95px;
+        height:30px;
+     ">
+           
+        <svg viewBox="0 0 95 30" width="95" height="30" >
+
+          <!-- BASE (rafale) -->
+          <polygon id="zoneRafaleE"
+            points="53,0 95,0 95,30 67,30"
+            fill="darkgray"
+  	    stroke="black"
+  	    stroke-width="2"
+  	    vector-effect="non-scaling-stroke" />
+
+          <!-- POINTE (vent moyen) -->
+          <polygon id="zoneVentE"
+            points="0,15 13,0 53,0 67,30 13,30"
+            fill="gray"
+	    stroke="black"
+  	    stroke-width="2"
+  	    vector-effect="non-scaling-stroke" />
+
+          <!-- TEXTE VENT -->
+          <text 
+            x="35" y="26"
+            font-size="16"
+            text-anchor="middle"
+            font-family="Arial"
+	    font-weight="bold"
+            fill="black">
+		<tspan id="textVentE">---</tspan>
+  		<tspan id="kmhE" font-size="8">km/h</tspan>
+	    </text>
+
+          <!-- TEXTE RAFALE -->
+          <text 
+            x="77" y="16"
+            font-size="16"
+            text-anchor="middle"
+            font-family="Arial"
+	    font-weight="bold"
+            fill="black">
+		<tspan id="textRafaleE">--</tspan>
+		<tspan id="*E">*</tspan>
+	</text>
+
+	</svg>
+      
+    </div>
+
+    </div>
   </div>
 </div>
 
+<!-- legende  --> 
+<div style="font-size:14px;color:black;">
+* Rafale (km/h) sur 3s
 </div>
+   
+  <!-- === TIMELINE METEO === -->
+  <div id="timeline-container">
+    <div id="units-column">
+      <div class="unit-band"></div>
+      <div class="unit-content">
+        <div class="unit">km/h</div>
+        <div class="unit"></div>
+        <div class="unit"></div>
+        <div class="unit"></div>
+        <div class="unit"></div>
+        <div class="unit unit-temp">°C</div>
+        <div class="unit unit-hum">%</div>
+      </div>
+    </div>
+
+    <div id="timeline-wrapper">
+      <div id="timeline"></div>
+    </div>
+  </div>
+
+
+<style>
+#timeline-container {
+  display: flex;
+  width: 250px;
+  background: #111;
+  font-family: Arial, sans-serif;
+  margin-top:5px;
+}
+
+#units-column {
+  width: 40px;
+  min-width: 40px;
+  background: black;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 145px;
+  flex-shrink: 0;
+}
+
+.unit-band {
+  height: 25px;
+}
+
+.unit-content {
+  height: calc(145px - 30px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  font-size: 12px;
+}
+
+.unit.unit-temp {
+  transform: translateY(4px);
+}
+
+.unit.unit-hum {
+  transform: translateY(6px);
+}
+
+#timeline-wrapper {
+  width: 210px;
+  overflow-x: auto;
+}
+
+#timeline {
+  display: flex;
+  overflow-x: auto;
+  background: #111;
+}
+
+.col {
+  flex: 1 0 auto;
+  min-width: 45px;
+  max-width: 55px;
+  height: 145px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: black;
+}
+
+.band-wind {
+  height: 52%;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.band-temp {
+  height: 25%;
+  width: 100%;
+}
+
+.band-hum {
+  height: 25%;
+  width: 100%;
+}
+
+.content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  font-size: 12px;
+  text-align: center;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.hour {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: white;
+  background: black;
+  padding: 2px 4px;
+  border-radius: 3px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+#timeline::-webkit-scrollbar {
+  height: 5px;
+}
+
+#timeline::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 3px;
+}
+</style>
 
 <script>
 const channelID = 3217135;
 const readAPIKey = "0NGJYHZW5BA8BCWD";
 
-async function updateVent(){
-  try{
-    const r = await fetch(`https://api.thingspeak.com/channels/${channelID}/fields/7/last.json?api_key=${readAPIKey}`);
-    const j = await r.json();
-
-    const str = j.field7?.toString();
-    if(!str) return;
-
-    const v = parseInt(str.slice(0,3),10)/10;
-    const rfl = parseInt(str.slice(3,5),10);
-
-    document.getElementById("temperature").textContent = (parseInt(str.slice(8,11),10)/2-25).toFixed(1);
-    document.getElementById("humidity").textContent = parseInt(str.slice(11,13),10);
-
-  } catch(e){}
+/* === FONCTIONS UTILES === */
+function avgDirection(arr){
+    if(!arr || arr.length === 0) return 0;
+    let sumSin=0, sumCos=0, count=0;
+    arr.forEach(d=>{
+        if(typeof d !== "number" || isNaN(d)) return;
+        const rad=d*Math.PI/180;
+        sumSin+=Math.sin(rad);
+        sumCos+=Math.cos(rad);
+        count++;
+    });
+    if(count===0) return 0;
+    let deg=Math.atan2(sumSin/count,sumCos/count)*180/Math.PI;
+    return (deg+360)%360;
 }
 
+function windColor(v){
+    if(v===null||isNaN(v)) return "#ccc";
+    //const stops=[{v:0,c:[53,77,255]},{v:10,c:[0,200,0]},{v:20,c:[255,255,0]},{v:40,c:[255,140,0]},{v:50,c:[255,0,0]},{v:60,c:[150,0,255]}]; // palette 2 
+    const stops=[{v:0,c:[0,0,255]},{v:7,c:[0,150,255]},{v:10,c:[0,200,0]},{v:20,c:[255,255,0]},{v:40,c:[255,140,0]},{v:50,c:[255,0,0]},{v:60,c:[150,0,255]}]; // palette 1 
+   
+    for(let i=0;i<stops.length-1;i++){
+        if(v<=stops[i+1].v){
+            let t=(v-stops[i].v)/(stops[i+1].v-stops[i].v);
+            let c1=stops[i].c,c2=stops[i+1].c;
+            return `rgb(${Math.round(c1[0]+(c2[0]-c1[0])*t)},${Math.round(c1[1]+(c2[1]-c1[1])*t)},${Math.round(c1[2]+(c2[2]-c1[2])*t)})`;
+        }
+    }
+    return "rgb(150,0,255)";
+}
+
+function getTextColor(rgb){
+    const values = rgb.match(/\d+/g).map(Number);
+    const brightness = (values[0]*299 + values[1]*587 + values[2]*114) / 1000;
+    return brightness > 80 ? "black" : "white";
+}
+
+
+function tempColor(t){ /* identique code 2 */ 
+    if(t===null||isNaN(t)) return "#ccc";
+    const stops=[{v:-15,c:[0,255,255]},{v:-5,c:[100,180,255]},{v:5,c:[255,255,255]},{v:15,c:[255,255,150]},{v:25,c:[255,165,0]},{v:35,c:[255,0,0]},{v:45,c:[220,0,0]}];
+    for(let i=0;i<stops.length-1;i++){
+        if(t<=stops[i+1].v){
+            let r=(t-stops[i].v)/(stops[i+1].v-stops[i].v);
+            let c1=stops[i].c,c2=stops[i+1].c;
+            return `rgb(${Math.round(c1[0]+(c2[0]-c1[0])*r)},${Math.round(c1[1]+(c2[1]-c1[1])*r)},${Math.round(c1[2]+(c2[2]-c1[2])*r)})`;
+        }
+    }
+    return "rgb(220,0,0)";
+}
+function humColor(h){ /* identique code 2 */
+    if(h===null||isNaN(h)) return "#ccc";
+    const stops=[{v:0,c:[209,198,173]},{v:30,c:[209,198,173]},{v:40,c:[169,142,99]},{v:70,c:[0,255,255]},{v:85,c:[4,155,235]},{v:100,c:[38,171,238]}];
+    for(let i=0;i<stops.length-1;i++){
+        if(h<=stops[i+1].v){
+            let t=(h-stops[i].v)/(stops[i+1].v-stops[i].v);
+            let c1=stops[i].c,c2=stops[i+1].c;
+            return `rgb(${Math.round(c1[0]+(c2[0]-c1[0])*t)},${Math.round(c1[1]+(c2[1]-c1[1])*t)},${Math.round(c1[2]+(c2[2]-c1[2])*t)})`;
+        }
+    }
+    return "rgb(0,0,100)";
+}
+
+/* === UPDATE FLECHE ET INFOS EN TEMPS REEL === */
+async function updateVent(){
+    try{
+        // Vent
+        const respData = await fetch(`https://api.thingspeak.com/channels/${channelID}/fields/7/last.json?api_key=${readAPIKey}`);
+        const jsonData = await respData.json();
+	const createdAt = jsonData.created_at;
+        const nbData = jsonData.field7;
+        const strData = nbData?.toString();
+
+        const flecheW=document.getElementById("flecheContainer");
+	const flecheE=document.getElementById("flecheContainerE");
+
+	const zoneVent = document.getElementById("zoneVent");
+	const zoneRafale = document.getElementById("zoneRafale");
+	const zoneVentE = document.getElementById("zoneVentE");
+	const zoneRafaleE = document.getElementById("zoneRafaleE");
+
+	const flecheSeuilNW = document.getElementById("runwayArrowNW");
+	const flecheSeuilSE = document.getElementById("runwayArrowSE");
+	
+	// heure
+	if (createdAt) {
+    		const date = new Date(createdAt);
+
+    		const options = {
+        	day: '2-digit',
+        	month: '2-digit',
+        	year: 'numeric',
+        	hour: '2-digit',
+        	minute: '2-digit'
+    		};
+
+    	const formatted = date.toLocaleString('fr-FR', options);
+
+    	document.getElementById("lastUpdate").textContent = formatted;
+	}
+	
+	// Affichage noData
+        if(strData && strData!="NULL")
+	{
+            const vitesse=parseInt(strData.slice(0,3),10)/10;
+            const rafale=parseInt(strData.slice(3,5),10);
+            const direction=parseInt(strData.slice(5,8),10);
+	
+	// Mettre à jour les valeurs dans la fleche SVG
+	    if(vitesse<10)
+		{
+		document.getElementById("textVent").textContent=vitesse.toFixed(1);
+		document.getElementById("textVentE").textContent=vitesse.toFixed(1);
+		}
+	    else 	
+		{
+		document.getElementById("textVent").textContent=vitesse.toFixed(0);
+		document.getElementById("textVentE").textContent=vitesse.toFixed(0);
+		}
+	    
+	    document.getElementById("textRafale").textContent=rafale.toFixed(0);
+	    document.getElementById("textRafaleE").textContent=rafale.toFixed(0);
+
+            
+	 // Mettre à jour les couleurs du SVG
+            zoneVent.setAttribute("fill", windColor(vitesse));
+            zoneRafale.setAttribute("fill", windColor(rafale));
+	    zoneVentE.setAttribute("fill", windColor(vitesse));
+            zoneRafaleE.setAttribute("fill", windColor(rafale));
+
+         // Mettre à jour les couleurs des textes de la fleche de vent
+	    document.getElementById("textVent").setAttribute("fill", getTextColor(windColor(vitesse))); 
+	    document.getElementById("kmhW").setAttribute("fill", getTextColor(windColor(vitesse)));
+	    document.getElementById("textRafale").setAttribute("fill", getTextColor(windColor(rafale)));
+	    document.getElementById("*W").setAttribute("fill", getTextColor(windColor(rafale)));
+
+	    document.getElementById("textVentE").setAttribute("fill", getTextColor(windColor(vitesse))); 
+	    document.getElementById("kmhE").setAttribute("fill", getTextColor(windColor(vitesse)));
+	    document.getElementById("textRafaleE").setAttribute("fill", getTextColor(windColor(rafale)));
+	    document.getElementById("*E").setAttribute("fill", getTextColor(windColor(rafale)));
+
+	// affiche l'une au l'autre des fleches
+	if ( direction > 180 ) {
+		flecheW.style.display="block";
+            	flecheW.style.transform=` translate(-95px, -15px) rotate(${direction+90}deg)`;
+		flecheE.style.display="none";
+			}
+	else  {
+		flecheE.style.display="block";
+            	flecheE.style.transform=` translate(0px, -15px) rotate(${direction-90}deg)`;
+		flecheW.style.display="none";
+		}
+	// affiche l'une au l'autre des fleches de sens de piste 
+	if ( direction > 47 + 2 && direction < 227-2 ) {
+		flecheSeuilNW.style.display="none";
+		flecheSeuilSE.style.display="block";
+		}
+	else if (direction > 227 + 2 ) { 
+		flecheSeuilSE.style.display="none";
+		flecheSeuilNW.style.display="block";
+
+		}
+	else if (direction < 47 - 2) { 
+		flecheSeuilSE.style.display="none";
+		flecheSeuilNW.style.display="block";
+		}
+	else  { 
+		flecheSeuilSE.style.display="none";
+		flecheSeuilNW.style.display="none";
+		}
+
+        } else 
+		{
+            	flecheW.style.display="none";
+		flecheE.style.display="none";
+            	document.getElementById("temperature").textContent="--";
+            	document.getElementById("humidity").textContent="--";
+        	}
+
+        // Température
+        document.getElementById("temperature").textContent=(parseInt(strData.slice(8,11),10)/2-25).toFixed(1);
+
+        // Humidité
+        document.getElementById("humidity").textContent=parseInt(strData.slice(11,13),10).toFixed(0);
+
+    } catch(e){
+        console.warn("Données non disponibles :", e);
+    }
+}
+
+/* === TIMELINE === */
+async function loadTimeline(){
+    try{
+        const resp = await fetch(`https://api.thingspeak.com/channels/${channelID}/feeds.json?results=200&api_key=${readAPIKey}`);
+        const data = await resp.json();
+
+        const now = new Date();
+        const last24h = new Date(now - 24*60*60*1000);
+
+        const feeds = data.feeds
+            .map(f=>({time:new Date(f.created_at), field7:f.field7}))
+            .filter(f=>f.time>=last24h)
+            .sort((a,b)=>a.time-b.time);
+
+        const hourlyMap={};
+
+        feeds.forEach(feed=>{
+            if(!feed.field7) return;
+            const str = feed.field7.toString();
+            const vent=parseInt(str.slice(0,3))/10;
+	    const dir=parseInt(str.slice(5,8));
+            const temp=parseInt(str.slice(8,11))/2-25;
+            const hum=parseInt(str.slice(11,13));
+
+            const d=feed.time;
+            const key=d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate()+"-"+d.getHours();
+
+            if(!hourlyMap[key]) hourlyMap[key]={time:d, vent:[], dir:[], temp:[], hum:[] };
+
+            hourlyMap[key].vent.push(vent);
+            hourlyMap[key].dir.push(dir);
+	    hourlyMap[key].temp.push(temp); 
+            hourlyMap[key].hum.push(hum); 
+        });
+
+        const hourlyData=Object.values(hourlyMap).map(h=>{
+            const hourStart=new Date(h.time);
+            hourStart.setMinutes(0,0,0);
+            const hourEnd=new Date(hourStart);
+            hourEnd.setHours(hourEnd.getHours()+1);
+
+            return {
+                time:h.time,
+                vent:h.vent.length>0?h.vent.reduce((a,b)=>a+b,0)/h.vent.length:null,
+                dir:avgDirection(h.dir),
+                temp:h.temp.length>0?h.temp.reduce((a,b)=>a+b,0)/h.temp.length:null,
+                hum:h.hum.length>0?h.hum.reduce((a,b)=>a+b,0)/h.hum.length:null
+            };
+        }).sort((a,b)=>a.time-b.time);
+
+        const container=document.getElementById("timeline");
+        container.innerHTML="";
+
+        hourlyData.forEach(d=>{
+            const col=document.createElement("div");
+            col.className="col";
+
+            const bandWind=document.createElement("div");
+            bandWind.className="band-wind";
+            bandWind.style.backgroundColor=windColor(d.vent);
+
+            const bandTemp=document.createElement("div");
+            bandTemp.className="band-temp";
+            bandTemp.style.backgroundColor=tempColor(d.temp);
+
+            const bandHum=document.createElement("div");
+            bandHum.className="band-hum";
+            bandHum.style.backgroundColor=humColor(d.hum);
+
+            col.appendChild(bandWind);
+            col.appendChild(bandTemp);
+            col.appendChild(bandHum);
+
+            const rotation=(typeof d.dir==="number"&&!isNaN(d.dir))?d.dir+90:0;
+            const hourLabel=d.time.getHours()+"h";
+
+            const content=document.createElement("div");
+            content.className="content";
+            content.innerHTML=`
+                <div class="hour">${hourLabel}</div>
+                <div>${d.vent!==null?Math.round(d.vent):"--"}</div>
+                <div>${d.vent!==null?Math.round(d.vent):"--"}</div>
+                <div style="transform:rotate(${rotation}deg); font-size:20px;">➤</div>
+                <div>${d.temp!==null?Math.round(d.temp):"--"}</div>
+                <div>${d.hum!==null?Math.round(d.hum):"--"}</div>
+            `;
+            col.appendChild(content);
+            container.appendChild(col);
+        });
+
+        setTimeout(()=>{container.scrollLeft=container.scrollWidth;},0);
+
+    } catch(e){
+        console.warn("Erreur chargement :",e);
+    }
+}
+
+// Lancement
 updateVent();
 setInterval(updateVent,15000);
+loadTimeline();
+setInterval(loadTimeline,60000);
 </script>
-
 </body>
-</html>
+</html> 
