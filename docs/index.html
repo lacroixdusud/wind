@@ -423,38 +423,38 @@ async function updateVent(){
 
 	// affiche l'une au l'autre des fleches
 	if ( direction > 180 ) {
-		flecheW.setAttribute("display","block");
+		flecheW.setAttribute("display","inline");
 		flecheW.setAttribute("transform", `translate(352 400) rotate(${direction+90})`);
 		flecheE.setAttribute("display","none");
 			}
 	else  {
-		flecheE.setAttribute("display","block");
+		flecheE.setAttribute("display","inline");
 		flecheE.setAttribute("transform", `translate(448 400) rotate(${direction-90})`);
 		flecheW.setAttribute("display","none");
 		}
 	// affiche l'une au l'autre des fleches de sens de piste 
 	if ( direction > 47 + 2 && direction < 227-2 ) {
-		flecheSeuilNW.style.display="none";
-		flecheSeuilSE.style.display="block";
+		flecheSeuilNW.setAttribute("display","none");
+		flecheSeuilSE.setAttribute("display","inline");
 		}
 	else if (direction > 227 + 2 ) { 
-		flecheSeuilSE.style.display="none";
-		flecheSeuilNW.style.display="block";
+		flecheSeuilSE.setAttribute("display","none");
+		flecheSeuilNW.setAttribute("display","inline");
 
 		}
 	else if (direction < 47 - 2) { 
-		flecheSeuilSE.style.display="none";
-		flecheSeuilNW.style.display="block";
+		flecheSeuilSE.setAttribute("display","none");
+		flecheSeuilNW.setAttribute("display","inline");
 		}
 	else  { 
-		flecheSeuilSE.style.display="none";
-		flecheSeuilNW.style.display="none";
+		flecheSeuilSE.setAttribute("display","none");
+		flecheSeuilNW.setAttribute("display","inline");
 		}
 
         } else 
 		{
-        flecheW.style.display="none";
-		flecheE.style.display="none";
+        flecheW.style.setAttribute("display","none");
+		flecheE.style.setAttribute("display","none");
         document.getElementById("temperature").textContent="--";
         document.getElementById("humidity").textContent="--";
         }
