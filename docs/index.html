@@ -45,7 +45,7 @@
 	</g>
 	
 	<!-- FLECHE SVG coté W -->
-	<g id="flecheContainer" transform="translate(305 400)">
+	<g id="flecheContainer" transform="translate(352 400)">
 	
 	<!-- base rafale -->
 		<polygon id="zoneRafale"
@@ -84,7 +84,7 @@
 		</text>
 	 </g>
 		<!-- FLECHE VENT E -->
-			<g id="flecheContainerE" transform="translate(495 400)">
+			<g id="flecheContainerE" transform="translate(448 400)">
 			
 			<!-- base rafale -->
 			<polygon id="zoneRafaleE"
@@ -347,22 +347,22 @@ function humColor(h){ /* identique code 2 */
 async function updateVent(){
     try{
         // Vent
-        const respData = await fetch(`https://api.thingspeak.com/channels/${channelID}/fields/7/last.json?api_key=${readAPIKey}`);
-        const jsonData = await respData.json();
-	const createdAt = jsonData.created_at;
-        const nbData = jsonData.field7;
-        const strData = nbData?.toString();
-
-        const flecheW=document.getElementById("flecheContainer");
-	const flecheE=document.getElementById("flecheContainerE");
-
-	const zoneVent = document.getElementById("zoneVent");
-	const zoneRafale = document.getElementById("zoneRafale");
-	const zoneVentE = document.getElementById("zoneVentE");
-	const zoneRafaleE = document.getElementById("zoneRafaleE");
-
-	const flecheSeuilNW = document.getElementById("runwayArrowNW");
-	const flecheSeuilSE = document.getElementById("runwayArrowSE");
+		const respData = await fetch(`https://api.thingspeak.com/channels/${channelID}/fields/7/last.json?api_key=${readAPIKey}`);
+		const jsonData = await respData.json();
+		const createdAt = jsonData.created_at;
+		const nbData = jsonData.field7;
+		const strData = nbData?.toString();
+		
+		const flecheW=document.getElementById("flecheContainer");
+		const flecheE=document.getElementById("flecheContainerE");
+		
+		const zoneVent = document.getElementById("zoneVent");
+		const zoneRafale = document.getElementById("zoneRafale");
+		const zoneVentE = document.getElementById("zoneVentE");
+		const zoneRafaleE = document.getElementById("zoneRafaleE");
+		
+		const flecheSeuilNW = document.getElementById("runwayArrowNW");
+		const flecheSeuilSE = document.getElementById("runwayArrowSE");
 	
 	// heure
 	if (createdAt) {
@@ -405,10 +405,10 @@ async function updateVent(){
 
             
 	 // Mettre à jour les couleurs du SVG
-            zoneVent.setAttribute("fill", windColor(vitesse));
-            zoneRafale.setAttribute("fill", windColor(rafale));
+        zoneVent.setAttribute("fill", windColor(vitesse));
+        zoneRafale.setAttribute("fill", windColor(rafale));
 	    zoneVentE.setAttribute("fill", windColor(vitesse));
-            zoneRafaleE.setAttribute("fill", windColor(rafale));
+        zoneRafaleE.setAttribute("fill", windColor(rafale));
 
          // Mettre à jour les couleurs des textes de la fleche de vent
 	    document.getElementById("textVent").setAttribute("fill", getTextColor(windColor(vitesse))); 
