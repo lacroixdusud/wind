@@ -425,12 +425,12 @@ async function updateVent(){
 	if ( direction > 180 ) {
 		flecheW.style.display = "block";
 		flecheE.style.display = "none";
-		flecheW.setAttribute("transform", `translate(352 400) rotate(${direction+90})`);
+		flecheW.setAttribute("transform", `translate(400 400) rotate(${direction+90})`);
 			}
 	else  {
 		flecheE.style.display = "block";
 		flecheW.style.display = "none";
-		flecheE.setAttribute("transform", `translate(448 400) rotate(${direction-90})`);
+		flecheE.setAttribute("transform", `translate(400 400) rotate(${direction-90})`);
 		}
 	// affiche l'une au l'autre des fleches de sens de piste 
 	if ( direction > 47 + 2 && direction < 227-2 ) {
