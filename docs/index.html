@@ -423,14 +423,14 @@ async function updateVent(){
 
 	// affiche l'une au l'autre des fleches
 	if ( direction > 180 ) {
-		flecheW.setAttribute("display","inline");
+		flecheW.style.display = "block";
+		flecheE.style.display = "none";
 		flecheW.setAttribute("transform", `translate(352 400) rotate(${direction+90})`);
-		flecheE.setAttribute("display","none");
 			}
 	else  {
-		flecheE.setAttribute("display","inline");
+		flecheE.style.display = "block";
+		flecheW.style.display = "none";
 		flecheE.setAttribute("transform", `translate(448 400) rotate(${direction-90})`);
-		flecheW.setAttribute("display","none");
 		}
 	// affiche l'une au l'autre des fleches de sens de piste 
 	if ( direction > 47 + 2 && direction < 227-2 ) {
