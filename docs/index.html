@@ -14,99 +14,45 @@
 <!-- === FLECHE DE VENT ET INFOS === -->
 <div>
 <svg viewBox="0 0 800 800" style="width:90vw; max-width:800px; display:block; margin:auto;">
-
   <!-- cercle -->
   <circle cx="400" cy="400" r="380" fill="#f9f9f9" stroke="#333" stroke-width="3"/>
-
   <!-- N -->
-  <text x="400" y="50"
-        text-anchor="middle"
-        dominant-baseline="middle"
-        font-size="40"
-        fill="gray">N</text>
-
+  <text x="400" y="50" text-anchor="middle" dominant-baseline="middle" font-size="40" fill="gray">N</text>
   <!-- S -->
-  <text x="400" y="750"
-        text-anchor="middle"
-        dominant-baseline="middle"
-        font-size="40"
-        fill="gray">S</text>
-
+  <text x="400" y="750" text-anchor="middle" dominant-baseline="middle" font-size="40" fill="gray">S</text>
   <!-- E -->
-  <text x="750" y="400"
-        text-anchor="middle"
-        dominant-baseline="middle"
-        font-size="40"
-        fill="gray">E</text>
-
-  <!-- W -->
-  <text x="50" y="400"
-        text-anchor="middle"
-        dominant-baseline="middle"
-        font-size="40"
-        fill="gray">W</text>
+  <text x="750" y="400"  text-anchor="middle"  dominant-baseline="middle" font-size="40" fill="gray">E</text>
+ <!-- W -->
+  <text x="50" y="400" text-anchor="middle" dominant-baseline="middle" font-size="40" fill="gray">W</text>
 
 <!-- Temp et hum  --> 
-<text x="0" y="70"
-        text-anchor="start"
-        font-size="50"
-        fill="black">🌡️<tspan id="temperature">--</tspan>°C</text>
+<text x="0" y="70"text-anchor="start" font-size="50" fill="black">🌡️<tspan id="temperature">--</tspan>°C</text>
+<text x="650" y="70"  text-anchor="start"  font-size="50"  fill="black">💧<tspan id="humidity">--</tspan>%</text>
 
-<text x="650" y="70"
-        text-anchor="start"
-        font-size="50"
-        fill="black">💧<tspan id="humidity">--</tspan>%</text>
-
-  <!-- rectangle tourné -->
-  <!-- groupe tournant -->
-  <g transform="rotate(47 400 400)">
-	<rect x="75" y="250"
-        width="650" height="300"
-        fill="#228B22"
-        stroke="black"
-        stroke-width="2"
-        rx="5"/>
-   
+<!-- rectangle tourné -->  <!-- groupe tournant -->
+<g transform="rotate(47 400 400)">
+	<rect x="75" y="250" width="650" height="300" fill="#228B22" stroke="black" stroke-width="2" rx="5"/>
 	<!-- petit rectangle -->
-    <rect x="330" y="508"
-          width="140" height="42"
-          fill="gray"
-          stroke="black"
-          stroke-width="2"
-          rx="2"/>
-	
+    <rect x="330" y="508"  width="140" height="42"  fill="gray"  stroke="black"  stroke-width="2"  rx="2"/>
 	<!-- FLECHE SEUIL -->
       	<g transform="translate(650 350)">
-			<polygon id="runwayArrowNW" points="0,50 50,0 60,10 20,50 60,90 50,100 "
-			fill="white"
-        	stroke="black"
-        	stroke-width="2"/>
+			<polygon id="runwayArrowNW" points="0,50 50,0 60,10 20,50 60,90 50,100 " fill="white" stroke="black" stroke-width="2"/>
     	</g>
-	
 	<!-- FLECHE SEUIL -->
       	<g transform="translate(100 350)">
-		<polygon id="runwayArrowSE" points="60,50 10,0 0,10 40,50 0,90 10,100 "
-			fill="white"
-        	stroke="black"
-        	stroke-width="2"/>
+			<polygon id="runwayArrowSE" points="60,50 10,0 0,10 40,50 0,90 10,100 " fill="white" stroke="black"	stroke-width="2"/>
     	</g>
-  </g>
+</g>
 </svg>
 
 <!-- FLECHE SVG coté W -->
   <div id="flecheContainer"
-     style="
-        position:absolute;
-        top:50%;
-        left:50%;
-        transform: translate(-95px, -15px) rotate(0deg);
-        transform-origin: 95px 15px;
+     style="  position:absolute;  top:50%;  left:50%;  transform: translate(-95px, -15px) rotate(0deg);  transform-origin: 95px 15px;
         width:95px;
         height:30px;
      ">
            
         <svg viewBox="0 0 95 30" width="95" height="30" >
-
           <!-- BASE (rafale) -->
           <polygon id="zoneRafale"
             points="0,0 38,0 24,30 0,30"
