@@ -5,8 +5,6 @@
   <title>wind.lacroixdusud.club</title>
 </head>
 <body>
-<div id="zoom-wrapper">
-
 <div style="font-family: Arial, sans-serif;  text-align:left; margin:0px; color:black;"> 
 
 <div style="font-size:14px; margin-bottom:10px;">
@@ -250,9 +248,6 @@
     </div>
   </div>
 
- 
-</div>
-	
 <style>
 #timeline-container {
   display: flex;
@@ -382,23 +377,6 @@ const channelID = 3217135;
 const readAPIKey = "0NGJYHZW5BA8BCWD";
 
 /* === FONCTIONS UTILES === */
-function autoZoom() {
-  const baseWidth = 250; // largeur de ton design
-  const screenWidth = window.innerWidth;
-
-  let scale = screenWidth /  baseWidth / 1.5;
-
-  // limite pour éviter bugs et flou excessif
-  //if (scale > 2) scale = 2;
-  //if (scale < 0.5) scale = 0.5;
-
-  const wrapper = document.getElementById("zoom-wrapper");
-
-  wrapper.style.transformOrigin = "top left";
-  wrapper.style.transform = `scale(${scale})`;
-
-  // IMPORTANT : ne touche PAS width sinon layout cassé
-}
 
 function avgDirection(arr){
     if(!arr || arr.length === 0) return 0;
@@ -685,10 +663,6 @@ async function loadTimeline(){
         console.warn("Erreur chargement :",e);
     }
 }
-
-// autoZoom
-window.addEventListener("resize", autoZoom);
-window.addEventListener("load", autoZoom);
 	
 // Lancement
 updateVent();
