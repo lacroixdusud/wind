@@ -47,51 +47,22 @@
 
 <!-- FLECHE SVG coté W -->
   <div id="flecheContainer"
-     style="  position:absolute;  top:50%;  left:50%;  transform: translate(-95px, -15px) rotate(0deg);  transform-origin: 95px 15px;
-        width:95px;
-        height:30px;
-     ">
-           
+     style="  position:absolute;  top:50%;  left:50%;  transform: translate(-95px, -15px) rotate(0deg);  transform-origin: 95px 15px;  width:95px;  height:30px; ">    
         <svg viewBox="0 0 95 30" width="95" height="30" >
-          <!-- BASE (rafale) -->
-          <polygon id="zoneRafale"
-            points="0,0 38,0 24,30 0,30"
-            fill="darkgray"
-  	    stroke="black"
-  	    stroke-width="2"
-  	    vector-effect="non-scaling-stroke" />
-
-          <!-- POINTE (vent moyen) -->
-          <polygon id="zoneVent"
-            points="38,0 82,0 95,15 82,30 24,30"
-            fill="gray"
-	    stroke="black"
-  	    stroke-width="2"
-  	    vector-effect="non-scaling-stroke" />
-
-          <!-- TEXTE VENT -->
-          <text 
-            x="56" y="26"
-            font-size="16"
-            text-anchor="middle"
-            font-family="Arial"
-	    font-weight="bold"
-            fill="black">
-		<tspan id="textVent">---</tspan>
-  		<tspan id="kmhW" font-size="8">km/h</tspan>
-	    </text>
-
-          <!-- TEXTE RAFALE -->
-          <text 
-            x="16" y="16"
-            font-size="16"
-            text-anchor="middle"
-            font-family="Arial"
-	    font-weight="bold"
-            fill="black">
-		<tspan id="textRafale">--</tspan>
-		<tspan id="*W">*</tspan>
-	   </text>
+          	<!-- BASE (rafale) -->
+          	<polygon id="zoneRafale" points="0,0 38,0 24,30 0,30" fill="darkgray"stroke="black"stroke-width="2" vector-effect="non-scaling-stroke" />
+          	<!-- POINTE (vent moyen) -->
+          	<polygon id="zoneVent"   points="38,0 82,0 95,15 82,30 24,30"   fill="gray" stroke="black" stroke-width="2" vector-effect="non-scaling-stroke" />
+          	<!-- TEXTE VENT -->
+        	<text    x="56" y="26"   font-size="16"   text-anchor="middle"   font-family="Arial"  font-weight="bold"      fill="black">
+				<tspan id="textVent">---</tspan>
+  				<tspan id="kmhW" font-size="8">km/h</tspan>
+	   		</text>
+          	<!-- TEXTE RAFALE -->
+        	<text   x="16" y="16"  font-size="16"  text-anchor="middle"  font-family="Arial" font-weight="bold"     fill="black">
+				<tspan id="textRafale">--</tspan>
+				<tspan id="*W">*</tspan>
+	   		</text>
       </svg>
     </div>
 
