@@ -7,89 +7,124 @@
 <body>
 <div style="font-family: Arial, sans-serif;  text-align:left; margin:0px; color:black;"> 
 
-<div style="font-size:50px; margin-bottom:10px;">
-🕒 <span id="lastUpdate">--</span>
-</div>
-
-<!-- === FLECHE DE VENT ET INFOS === -->
-<div>
-<svg viewBox="0 0 800 800" style="width:90vw; max-width:800px; display:block; margin:auto;">
-  <!-- cercle -->
-  <circle cx="400" cy="400" r="380" fill="#f9f9f9" stroke="#333" stroke-width="3"/>
-  <!-- N -->
-  <text x="400" y="50" text-anchor="middle" dominant-baseline="middle" font-size="40" fill="gray">N</text>
-  <!-- S -->
-  <text x="400" y="750" text-anchor="middle" dominant-baseline="middle" font-size="40" fill="gray">S</text>
-  <!-- E -->
-  <text x="750" y="400"  text-anchor="middle"  dominant-baseline="middle" font-size="40" fill="gray">E</text>
- <!-- W -->
-  <text x="50" y="400" text-anchor="middle" dominant-baseline="middle" font-size="40" fill="gray">W</text>
-
-<!-- Temp et hum  --> 
-<text x="0" y="70"text-anchor="start" font-size="50" fill="black">🌡️<tspan id="temperature">--</tspan>°C</text>
-<text x="650" y="70"  text-anchor="start"  font-size="50"  fill="black">💧<tspan id="humidity">--</tspan>%</text>
-
-<!-- rectangle tourné -->  <!-- groupe tournant -->
-<g transform="rotate(47 400 400)">
-	<rect x="75" y="250" width="650" height="300" fill="#228B22" stroke="black" stroke-width="2" rx="5"/>
-	<!-- petit rectangle -->
-    <rect x="330" y="508"  width="140" height="42"  fill="gray"  stroke="black"  stroke-width="2"  rx="2"/>
-	<!-- FLECHE SEUIL -->
-      	<g transform="translate(650 350)">
-			<polygon id="runwayArrowNW" points="0,50 50,0 60,10 20,50 60,90 50,100 " fill="white" stroke="black" stroke-width="2"/>
-    	</g>
-	<!-- FLECHE SEUIL -->
-      	<g transform="translate(100 350)">
-			<polygon id="runwayArrowSE" points="60,50 10,0 0,10 40,50 0,90 10,100 " fill="white" stroke="black"	stroke-width="2"/>
-    	</g>
-</g>
-</svg>
-
-<!-- FLECHE SVG coté W -->
-  <div id="flecheContainer"
-     style="  position:absolute;  top:50%;  left:50%;  transform: translate(-95px, -15px) rotate(0deg);  transform-origin: 95px 15px;  width:95px;  height:30px; ">    
-        <svg viewBox="0 0 95 30" width="95" height="30" >
-          	<!-- BASE (rafale) -->
-          	<polygon id="zoneRafale" points="0,0 38,0 24,30 0,30" fill="darkgray"stroke="black"stroke-width="2" vector-effect="non-scaling-stroke" />
-          	<!-- POINTE (vent moyen) -->
-          	<polygon id="zoneVent"   points="38,0 82,0 95,15 82,30 24,30"   fill="gray" stroke="black" stroke-width="2" vector-effect="non-scaling-stroke" />
-          	<!-- TEXTE VENT -->
-        	<text    x="56" y="26"   font-size="16"   text-anchor="middle"   font-family="Arial"  font-weight="bold"      fill="black">
-				<tspan id="textVent">---</tspan>
-  				<tspan id="kmhW" font-size="8">km/h</tspan>
-	   		</text>
-          	<!-- TEXTE RAFALE -->
-        	<text   x="16" y="16"  font-size="16"  text-anchor="middle"  font-family="Arial" font-weight="bold"     fill="black">
-				<tspan id="textRafale">--</tspan>
-				<tspan id="*W">*</tspan>
-	   		</text>
-      </svg>
-    </div>
-
-<!-- FLECHE SVG coté E -->
-  <div id="flecheContainerE" style="  position:absolute;  top:50%;  left:50%;  transform: translate(0px, -15px) rotate(0deg);  transform-origin: 0px 15px;  width:95px; height:30px; ">  
-        <svg viewBox="0 0 95 30" width="95" height="30" >
-          	<!-- BASE (rafale) -->
-          	<polygon id="zoneRafaleE"  points="53,0 95,0 95,30 67,30"  fill="darkgray" stroke="black" stroke-width="2" vector-effect="non-scaling-stroke" />
-          	<!-- POINTE (vent moyen) -->
-          	<polygon id="zoneVentE" points="0,15 13,0 53,0 67,30 13,30" fill="gray" stroke="black" stroke-width="2" vector-effect="non-scaling-stroke" />
-          	<!-- TEXTE VENT -->
-         	<text  x="35" y="26" font-size="16" text-anchor="middle" font-family="Arial"   font-weight="bold" fill="black">
-				<tspan id="textVentE">---</tspan>
-  				<tspan id="kmhE" font-size="8">km/h</tspan>
-	    	</text>
-
-        <!-- TEXTE RAFALE -->
-        	<text  x="77" y="16" font-size="16" text-anchor="middle" font-family="Arial"  font-weight="bold"   fill="black">
-				<tspan id="textRafaleE">--</tspan>
-				<tspan id="*E">*</tspan>
-			</text>
-		</svg>
+	<div style="font-size:50px; margin-bottom:10px;">
+	🕒 <span id="lastUpdate">--</span>
 	</div>
 
-</div>
-</div>
+	<!-- === FLECHE DE VENT ET INFOS === -->
+	<div>
+	<svg viewBox="0 0 800 800" style="width:90vw; max-width:800px; display:block; margin:auto;">
+	  <!-- cercle -->
+  	<circle cx="400" cy="400" r="380" fill="#f9f9f9" stroke="#333" stroke-width="3"/>
+  	<!-- N -->
+	<text x="400" y="50" text-anchor="middle" dominant-baseline="middle" font-size="40" fill="gray">N</text>
+	<!-- S -->
+	<text x="400" y="750" text-anchor="middle" dominant-baseline="middle" font-size="40" fill="gray">S</text>
+	<!-- E -->
+	<text x="750" y="400"  text-anchor="middle"  dominant-baseline="middle" font-size="40" fill="gray">E</text>
+	<!-- W -->
+	<text x="50" y="400" text-anchor="middle" dominant-baseline="middle" font-size="40" fill="gray">W</text>
+	
+	<!-- Temp et hum  --> 
+	<text x="0" y="70"text-anchor="start" font-size="50" fill="black">🌡️<tspan id="temperature">--</tspan>°C</text>
+	<text x="650" y="70"  text-anchor="start"  font-size="50"  fill="black">💧<tspan id="humidity">--</tspan>%</text>
 
+	<!-- rectangle tourné -->  <!-- groupe tournant -->
+	<g transform="rotate(47 400 400)">
+		<rect x="75" y="250" width="650" height="300" fill="#228B22" stroke="black" stroke-width="2" rx="5"/>
+		<!-- petit rectangle -->
+	    <rect x="330" y="508"  width="140" height="42"  fill="gray"  stroke="black"  stroke-width="2"  rx="2"/>
+		<!-- FLECHE SEUIL -->
+	      	<g transform="translate(650 350)">
+				<polygon id="runwayArrowNW" points="0,50 50,0 60,10 20,50 60,90 50,100 " fill="white" stroke="black" stroke-width="2"/>
+	    	</g>
+		<!-- FLECHE SEUIL -->
+	      	<g transform="translate(100 350)">
+				<polygon id="runwayArrowSE" points="60,50 10,0 0,10 40,50 0,90 10,100 " fill="white" stroke="black"	stroke-width="2"/>
+	    	</g>
+	</g>
+	
+	<!-- FLECHE SVG coté W -->
+	<g id="flecheContainer" transform="translate(400 400)">
+	
+	<!-- base rafale -->
+		<polygon id="zoneRafale"
+		points="-47,0 -9,0 -23,30 -47,30"
+		fill="darkgray"
+		stroke="black"
+		stroke-width="2"/>
+	
+	<!-- pointe vent -->
+		<polygon id="zoneVent"
+		points="-9,0 35,0 48,15 35,30 -23,30"
+		fill="gray"
+		stroke="black"
+		stroke-width="2"/>
+	
+	<!-- texte vent -->
+		<text x="10" y="20"
+			font-size="16"
+			text-anchor="middle"
+			font-family="Arial"
+			font-weight="bold"
+			fill="black">
+			<tspan id="textVent">---</tspan>
+			<tspan font-size="8"> km/h</tspan>
+		</text>
+	
+	<!-- texte rafale -->
+		<text x="-35" y="10"
+			font-size="16"
+			text-anchor="middle"
+			font-family="Arial"
+			font-weight="bold"
+			fill="black">
+			<tspan id="textRafale">--</tspan>
+			<tspan font-size="8">*</tspan>
+		</text>
+	 </g>
+		<!-- FLECHE VENT E -->
+			<g id="flecheContainerE" transform="translate(400 400)">
+			
+			<!-- base rafale -->
+			<polygon id="zoneRafaleE"
+			points="23,-15 65,-15 65,15 37,15"
+			fill="darkgray"
+			stroke="black"
+			stroke-width="2"/>
+			
+			<!-- pointe vent -->
+			<polygon id="zoneVentE"
+			points="-30,0 -17,-15 23,-15 37,15 -17,15"
+			fill="gray"
+			stroke="black"
+			stroke-width="2"/>
+			
+			<!-- texte vent -->
+			<text x="5" y="20"
+				font-size="16"
+				text-anchor="middle"
+				font-family="Arial"
+				font-weight="bold"
+				fill="black">
+			<tspan id="textVentE">---</tspan>
+			<tspan font-size="8"> km/h</tspan>
+			</text>
+			
+			<!-- texte rafale -->
+			<text x="45" y="10"
+				font-size="16"
+				text-anchor="middle"
+				font-family="Arial"
+				font-weight="bold"
+				fill="black">
+			<tspan id="textRafaleE">--</tspan>
+			<tspan font-size="8">*</tspan>
+			</text>
+			</g>
+		</svg>
+	</div>
+</div>
 
 <!-- legende  --> 
 <div style="font-family: Arial, sans-serif; font-size:12px; color:black;">
