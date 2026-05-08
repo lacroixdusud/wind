@@ -316,11 +316,13 @@ La Croix du Sud - Station météo
 	
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
 <script>
+/* === FLECHE VENT === */
 const channelID = 3217135;
 const readAPIKey = "0NGJYHZW5BA8BCWD";
-
-/* === FONCTIONS UTILES === */
 
 function avgDirection(arr){
     if(!arr || arr.length === 0) return 0;
@@ -607,12 +609,9 @@ async function loadTimeline(){
 }
 
 
-/* === FONCTIONS GRAPHIQUE === */
+/* === CHARTS === */
 const CHANNEL_ID = 3217135;
 const API_KEY = "0NGJYHZW5BA8BCWD";
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 
 let windChart, dirChart, tempChart, humChart;
 
