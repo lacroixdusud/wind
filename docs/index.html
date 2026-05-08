@@ -134,9 +134,8 @@ La Croix du Sud - Station météo
   <div>Vent moyen sur 10 minutes</div>
   <div>* : Rafale (km/h) sur 3s</div>
 </div>
-<
-   
-  <!-- === TIMELINE METEO === -->
+
+<!-- === TIMELINE METEO === -->
   <div id="timeline-container">
     <div id="units-column">
       <div class="unit-band"></div>
@@ -156,6 +155,46 @@ La Croix du Sud - Station météo
     </div>
   </div>
 
+<!-- === GRAPHIQUES === -->
+<div style="font-family:Segoe UI,sans-serif;background:#fff;color:#111;padding:15px;border-radius:12px;">
+
+  <span id="lastUpdateGrid"
+       style="margin-bottom:12px;font-size:14px;color:#333;">
+    Chargement...
+  </span>
+
+  <span style="margin-bottom:12px;font-size:14px;color:#333;">
+    Historique sur 72h
+  </span>
+
+  <div style="border:1px solid #eee;border-radius:8px;margin-bottom:15px;">
+    <div style="height:420px;width:100%;">
+      <canvas id="windChart"></canvas>
+    </div>
+  </div>
+
+  <div style="border:1px solid #eee;border-radius:8px;margin-bottom:15px;">
+    <div style="height:420px;width:100%;">
+      <canvas id="dirChart"></canvas>
+    </div>
+  </div>
+
+  <div style="border:1px solid #eee;border-radius:8px;margin-bottom:15px;">
+    <div style="height:420px;width:100%;">
+      <canvas id="tempChart"></canvas>
+    </div>
+  </div>
+
+  <div style="border:1px solid #eee;border-radius:8px;">
+    <div style="height:420px;width:100%;">
+      <canvas id="humChart"></canvas>
+    </div>
+  </div>
+</div>
+
+
+
+	
 <style>
 #timeline-container {
   display: flex;
@@ -347,7 +386,7 @@ function humColor(h){ /* identique code 2 */
     }
     return "rgb(0,0,100)";
 }
-
+	
 /* === UPDATE FLECHE ET INFOS EN TEMPS REEL === */
 async function updateVent(){
     try{
@@ -475,6 +514,9 @@ async function updateVent(){
     }
 }
 
+
+
+	
 /* === TIMELINE === */
 async function loadTimeline(){
     try{
@@ -571,12 +613,238 @@ async function loadTimeline(){
         console.warn("Erreur chargement :",e);
     }
 }
+/* === FONCTIONS GRAPHIQUE === */
+const CHANNEL_ID = 3217135;
+const API_KEY = "0NGJYHZW5BA8BCWD";
+
+let windChart, dirChart, tempChart, humChart;
+
+// =====================
+// ✅ DECODAGE FIXÉ (identique widget)
+function decode(v){
+  if(v == null) return null;
+
+  const s = String(v);
+  if(s.length < 13) return null;
+
+  return {
+    wind: parseInt(s.slice(0,3),10) / 10,
+    gust: parseInt(s.slice(3,5),10),
+    dir:  parseInt(s.slice(5,8),10),
+    temp: (parseInt(s.slice(8,11),10) / 2) - 25,
+    hum:  parseInt(s.slice(11,13),10)
+  };
+}
+
+// =====================
+function baseOptions(xScale){
+  return {
+    responsive:true,
+    maintainAspectRatio:false,
+    plugins:{
+      tooltip:{
+        callbacks:{
+          title:function(context){
+            const d = new Date(context[0].parsed.x);
+            const hh = String(d.getHours()).padStart(2,"0");
+            const mm = String(d.getMinutes()).padStart(2,"0");
+            return `${d.toLocaleDateString("fr-FR")} ${hh}:${mm}`;
+          }
+        }
+      }
+    }
+  };
+}
+
+// =====================
+async function load(){
+
+  const url = `https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?api_key=${API_KEY}&days=3`;
+  const res = await fetch(url);
+  const json = await res.json();
+
+  const dates = [];
+  const wind = [];
+  const gust = [];
+  const dir  = [];
+  const temp = [];
+  const hum  = [];
+
+  json.feeds.forEach(f => {
+
+    const d = new Date(f.created_at);
+    dates.push(d);
+
+    const m = decode(f.field7);
+
+    wind.push(m?.wind ?? null);
+    gust.push(m?.gust ?? null);
+    dir.push(m?.dir ?? null);
+    temp.push(m?.temp ?? null);
+    hum.push(m?.hum ?? null);
+  });
+
+  const last = dates.at(-1);
+  if(!last) return;
+
+  const hh = String(last.getHours()).padStart(2,"0");
+  const mm = String(last.getMinutes()).padStart(2,"0");
+
+  document.getElementById("lastUpdateGrid").innerText =
+    `🧭 ${last.toLocaleDateString("fr-FR")} ${hh}h${mm}`;
+
+  const xScale = {
+    type:"time",
+    time:{
+      unit:"hour",
+      stepSize:3,
+      displayFormats:{ hour:"HH'h'" }
+    },
+    min:dates[0],
+    max:last,
+    ticks:{
+      maxRotation:0,
+      minRotation:0,
+      autoSkip:false
+    },
+    grid:{ color:"#eee" }
+  };
+
+  const valid = arr => arr.filter(v => v != null && !isNaN(v));
+  const max = arr => arr.length ? Math.max(...valid(arr)) : 1;
+  const min = arr => arr.length ? Math.min(...valid(arr)) : 0;
+
+  const gustMax = max(gust);
+  const tempMin = min(temp) - 1;
+  const tempMax = max(temp) + 1;
+  const humMin = Math.max(0, min(hum) - 5);
+  const humMax = Math.min(100, max(hum) + 5);
+
+  draw(dates, wind, gust, dir, temp, hum, gustMax, tempMin, tempMax, humMin, humMax, xScale);
+}
+
+// =====================
+function draw(dates, wind, gust, dir, temp, hum, gustMax, tempMin, tempMax, humMin, humMax, xScale)
+{
+
+  if (windChart) windChart.destroy();
+  if (dirChart) dirChart.destroy();
+  if (tempChart) tempChart.destroy();
+  if (humChart) humChart.destroy();
+
+  const makeData = arr => dates.map((d,i)=>({x:d,y:arr[i]}));
+
+  windChart = new Chart(document.getElementById("windChart"),
+    {
+    type:"line",
+    data:{
+      datasets:[
+        {
+          label:"💨 Vent (km/h)",
+          data:makeData(wind),
+          borderColor:"blue",
+          showLine:false,
+          pointRadius:2
+        },
+        {
+          label:"💨💨 Rafales (km/h)",
+          data:makeData(gust),
+          borderColor:"red",
+          showLine:false,
+          pointRadius:2
+        }
+      ]
+    	},
+    options:{
+      ...baseOptions(xScale),
+      scales:{
+        x:xScale,
+        y:{ min:0, max:gustMax 
+          		}
+      		}
+    }
+ });
+
+  dirChart = new Chart(document.getElementById("dirChart"),{
+    type:"line",
+    data:{
+      datasets:[{
+        label:"\u27A4 Direction",
+        data: dates
+          .map((d,i)=> (wind[i] > 0 && dir[i] != null ? {x:d,y:dir[i]} : null))
+          .filter(Boolean),
+        borderColor:"green",
+        showLine:false,
+        pointRadius:2
+      }]
+    },
+    options:{
+      ...baseOptions(xScale),
+      scales:{
+        x:xScale,
+        y:{
+          min:0,
+          max:360,
+          ticks:{
+            stepSize:45,
+            callback:v=>({0:"N",45:"NE",90:"E",135:"SE",180:"S",225:"SW",270:"W",315:"NW",360:"N"}[v]||"")
+          }
+        }
+      }
+    }
+  });
+
+  tempChart = new Chart(document.getElementById("tempChart"),{
+    type:"line",
+    data:{
+      datasets:[{
+        label:"🌡 Température (\u00B0C)",
+        data:makeData(temp),
+        borderColor:"orange",
+        tension:0.3,
+        pointRadius:2,
+        spanGaps:true
+      }]
+    },
+    options:{
+      ...baseOptions(xScale),
+      scales:{
+        x:xScale,
+        y:{ min:tempMin, max:tempMax }
+      }
+    }
+  });
+
+  humChart = new Chart(document.getElementById("humChart"),{
+    type:"line",
+    data:{
+      datasets:[{
+        label:"💧 Humidité (%)",
+        data:makeData(hum),
+        borderColor:"dodgerblue",
+        tension:0.3,
+        pointRadius:2,
+        spanGaps:true
+      }]
+    },
+    options:{
+      ...baseOptions(xScale),
+      scales:{
+        x:xScale,
+        y:{ min:humMin, max:humMax }
+      }
+    }
+  });
+}
+
 	
 // Lancement
 updateVent();
 setInterval(updateVent,15000);
 loadTimeline();
 setInterval(loadTimeline,60000);
+load();
+setInterval(load, 60000);
 </script>
 </body>
 </html> 
