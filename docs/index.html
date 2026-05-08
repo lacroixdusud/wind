@@ -360,8 +360,6 @@ function getTextColor(rgb){
     const brightness = (values[0]*299 + values[1]*587 + values[2]*114) / 1000;
     return brightness > 80 ? "black" : "white";
 }
-
-
 function tempColor(t){ /* identique code 2 */ 
     if(t===null||isNaN(t)) return "#ccc";
     const stops=[{v:-15,c:[0,255,255]},{v:-5,c:[100,180,255]},{v:5,c:[255,255,255]},{v:15,c:[255,255,150]},{v:25,c:[255,165,0]},{v:35,c:[255,0,0]},{v:45,c:[220,0,0]}];
@@ -613,10 +611,15 @@ async function loadTimeline(){
         console.warn("Erreur chargement :",e);
     }
 }
+
+
 /* === FONCTIONS GRAPHIQUE === */
 const CHANNEL_ID = 3217135;
 const API_KEY = "0NGJYHZW5BA8BCWD";
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+	
 let windChart, dirChart, tempChart, humChart;
 
 // =====================
