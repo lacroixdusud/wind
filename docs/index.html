@@ -509,7 +509,7 @@ async function loadTimeline(){
 
 /* === CHARTS === */
 //const CHANNEL_ID = 3217135;
-//const API_KEY = "0NGJYHZW5BA8BCWD";
+const API_KEY = "0NGJYHZW5BA8BCWD";
 //channelID = 3217135;
 //readAPIKey = "0NGJYHZW5BA8BCWD";
 let windChart, dirChart, tempChart, humChart;
@@ -553,8 +553,8 @@ function baseOptions(xScale){
 
 // =====================
 async function load(){
-
-  const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${readAPIKey}&days=3`;
+  const url = `https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?api_key=${API_KEY}&days=3`;
+  //const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${readAPIKey}&days=3`;
   const res = await fetch(url);
   const json = await res.json();
 
