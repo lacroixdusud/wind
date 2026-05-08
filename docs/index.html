@@ -194,23 +194,53 @@ La Croix du Sud - Station météo
 </div>
 
 <style>
-	
 #timeline-container {display: flex;  width: auto;  background: #111;  font-family: Arial, sans-serif;  margin-top:5px;}
+
 #units-column { width: 40px; min-width: 40px; background: black; color: white; display: flex; flex-direction: column; align-items: center;height: 145px; flex-shrink: 0;}
-.unit-band {height: 25px;}
-.unit-content {  height: calc(145px - 30px);display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; font-size: 12px;}
-.unit.unit-temp { transform: translateY(4px);}
-.unit.unit-hum { transform: translateY(6px);}
-#timeline-wrapper { width: auto; overflow-x: auto;}
-#timeline { display: flex; overflow-x: auto; background: #111;}
-.col {flex: 1 0 auto; min-width: 45px; max-width: 55px; height: 145px; position: relative; display: flex; flex-direction: column; color: black;}
+
+.unit-band {
+  height: 25px;
+}
+
+.unit-content {
+  height: calc(145px - 30px);display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; font-size: 12px;}
+
+.unit.unit-temp {
+  transform: translateY(4px);
+}
+
+.unit.unit-hum {
+  transform: translateY(6px);
+}
+
+#timeline-wrapper {
+  width: auto;
+  overflow-x: auto;
+}
+
+#timeline {
+  display: flex;
+  overflow-x: auto;
+  background: #111;
+}
+
+.col {
+  flex: 1 0 auto; min-width: 45px; max-width: 55px; height: 145px; position: relative; display: flex; flex-direction: column; color: black;}
+
 .band-wind {  height: 52%; width: 100%; margin-top: 30px;}
+
 .band-temp { height: 25%; width: 100%;}
+
 .band-hum { height: 25%; width: 100%;}
+
 .content {position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; font-size: 12px; text-align: center; pointer-events: none;  white-space: nowrap;}
+
 .hour {  position: absolute;  top: 2px;  left: 50%;  transform: translateX(-50%);  font-size: 12px;  color: white;  background: black;  padding: 2px 4px;  border-radius: 3px;  z-index: 10;  pointer-events: none;}
+
 #timeline::-webkit-scrollbar {height: 5px;}
+
 #timeline::-webkit-scrollbar-thumb { background: #555; border-radius: 3px;}
+
 #zoom-wrapper { transform-origin: top left; -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision;}
 	
 </style>
@@ -508,10 +538,9 @@ async function loadTimeline(){
 }
 
 /* === CHARTS === */
-//const CHANNEL_ID = 3217135;
+const CHANNEL_ID = 3217135;
 const API_KEY = "0NGJYHZW5BA8BCWD";
-//channelID = 3217135;
-//readAPIKey = "0NGJYHZW5BA8BCWD";
+
 let windChart, dirChart, tempChart, humChart;
 
 // =====================
@@ -553,8 +582,8 @@ function baseOptions(xScale){
 
 // =====================
 async function load(){
+
   const url = `https://api.thingspeak.com/channels/${CHANNEL_ID}/feeds.json?api_key=${API_KEY}&days=3`;
-  //const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${readAPIKey}&days=3`;
   const res = await fetch(url);
   const json = await res.json();
 
